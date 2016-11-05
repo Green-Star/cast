@@ -5,6 +5,7 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <unistd.h>
+#include <sys/wait.h>
 
 static void usage(char *_argv0);
 static void handle_socket_error();
@@ -38,12 +39,14 @@ static void handle_accept_error() {
 }
 
 int main(int argc, char **argv) {
-  int sockfd;
+  int sockfd, clientfd;
   int error;
-  struct addrinfo hints, server;
-  struct addrinfo *info, *p;
   char *port;
   int backlog = 5;
+  struct addrinfo hints, server;
+  struct addrinfo *info, *p;
+  struct sockaddr_storage client_addr;
+  socklen_t client_len;
 
   if (argc < 2) {
     usage(argv[0]);
@@ -99,9 +102,19 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
+  
   /* Main loop (accept connection and fork to a child process) */
   while(1) {
-    ;
+
+    while(waitpid(-1, NULL, WNOHANG) > 0); /* Reap all sons zombies processes */
+    
+    client_len = sizeof(client_addr);
+    clientfd = accept(sockfd, (struct sockaddr*)&client_addr, &client_len);
+    if (clientfd < 0) {
+      /* TODO : Handle error */
+    }
+
+    /* TODO : Fork */
   }
   
   return EXIT_SUCCESS;
