@@ -9,10 +9,10 @@
 
 static void usage(char *_argv0);
 static void handle_socket_error();
-static void handle_connect_error();
 static void handle_bind_error();
 static void handle_listen_error();
 static void handle_accept_error();
+static void handle_fork_error();
 
 static void usage(char *_argv0) {
   fprintf(stderr, "Usage : %s <port to listen>\n", _argv0);
@@ -20,10 +20,6 @@ static void usage(char *_argv0) {
 
 static void handle_socket_error() {
   perror("socket");
-}
-
-static void handle_connect_error() {
-  perror("connect");
 }
 
 static void handle_bind_error() {
@@ -38,8 +34,13 @@ static void handle_accept_error() {
   perror("accept");
 }
 
+static void handle_fork_error() {
+  perror("fork");
+}
+
 int main(int argc, char **argv) {
   int sockfd, clientfd;
+  int pid;
   int error;
   char *port;
   int backlog = 5;
@@ -47,6 +48,7 @@ int main(int argc, char **argv) {
   struct addrinfo *info, *p;
   struct sockaddr_storage client_addr;
   socklen_t client_len;
+  char clientfd_param[3];
 
   if (argc < 2) {
     usage(argv[0]);
@@ -112,9 +114,29 @@ int main(int argc, char **argv) {
     clientfd = accept(sockfd, (struct sockaddr*)&client_addr, &client_len);
     if (clientfd < 0) {
       /* TODO : Handle error */
+      handle_accept_error();
+      continue;
     }
 
-    /* TODO : Fork */
+
+    
+    pid = fork();
+    if (pid < 0) {
+      handle_fork_error();
+      exit(EXIT_FAILURE);
+    }
+    else if (pid == 0) {
+      /* Son code */
+      close(sockfd); /* Son doesn't need this */
+      /* TODO : execlp */
+      sprintf(clientfd_param, "%d", clientfd);
+      execlp("cast_server", "cast_server", clientfd_param, (char*)NULL);
+      fprintf(stderr, "execlp failed\n");
+      exit(EXIT_FAILURE);
+    }
+
+    /* Parent does not need to interact with the client */
+    close(clientfd);
   }
   
   return EXIT_SUCCESS;
