@@ -7,7 +7,7 @@
 #include <netdb.h>
 
 #include "config.h"
-#include "do_shakehanding.h"
+#include "shakehands_client.h"
 
 static void usage(char *_argv0);
 static void handle_socket_error();
@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
   freeaddrinfo(info);
   
   printf("[client] Connection established, we're going to shake hands\n");
-  do_shakehanding(sockfd);
+  shakehands_client(sockfd);
   
   close(sockfd);
   
