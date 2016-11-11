@@ -23,7 +23,7 @@ $(BINDIR)/$(PROJECTNAME): $(OBJ)
 .PHONY: clean
 
 clean:
-	rm -f $(OBJDIR)/$(_OBJ) $(BINDIR)/$(PROJECTNAME)
+	rm -f $(patsubst %,$(OBJDIR)/%,$(_OBJ)) $(BINDIR)/$(PROJECTNAME)
 
 rebuild: clear clean all 
 
