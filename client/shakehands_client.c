@@ -9,14 +9,16 @@ static void handle_send_error() {
 void shakehands_client(int _sockfd, struct cast_file _file_to_send) {
   char buffer[SHAKEHAND_PACKET_SIZE];
   char path[FILE_LENGTH];
-  ssize_t total_sent, sent;
+  size_t path_length, total_sent;
+  ssize_t sent;
+
+  path_length = strlen(_file_to_send.file_name);
   
   buffer[0] = 0; /* TODO : Replace it with protocol (in a common header) */
   buffer[1] = 1; /* TODO : Replace it with the value of --force-upload */
-  
-  sprintf(buffer + 2, "%d", strlen(_file_to_send.file_name));
-  strcpy(buffer + 3, _file_to_send.file_name);
-  sprintf(buffer + 3 + buffer[2], "%d", _file_to_send.file_length);
+  serialize_long(path_length, buffer + 2);
+  strcpy(buffer + 10, _file_to_send.file_name);
+  serialize_long(_file_to_send.file_length, buffer + 10 + path_length);
 
   printf("Shakehanding with the server ...\n");
   
