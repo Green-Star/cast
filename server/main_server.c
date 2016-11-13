@@ -7,6 +7,8 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
+#include "common.h"
+
 static void usage(char *_argv0);
 static void handle_socket_error();
 static void handle_bind_error();
