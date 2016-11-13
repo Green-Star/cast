@@ -13,6 +13,7 @@ void shakehands_client(int _sockfd, struct cast_file _file_to_send) {
   
   buffer[0] = 0; /* TODO : Replace it with protocol (in a common header) */
   buffer[1] = 1; /* TODO : Replace it with the value of --force-upload */
+  
   sprintf(buffer + 2, "%d", strlen(_file_to_send.file_name));
   strcpy(buffer + 3, _file_to_send.file_name);
   sprintf(buffer + 3 + buffer[2], "%d", _file_to_send.file_length);

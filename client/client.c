@@ -8,6 +8,7 @@
 
 #include "config.h"
 #include "shakehands_client.h"
+#include "common.h"
 
 static void usage(char *_argv0);
 static void handle_socket_error();
