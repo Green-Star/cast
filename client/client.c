@@ -8,6 +8,7 @@
 
 #include "config.h"
 #include "shakehands_client.h"
+#include "file.h"
 #include "common.h"
 
 static void usage(char *_argv0);
@@ -52,14 +53,15 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
-  if (fseek(f.file, 0L, SEEK_END) < 0) {
-
+  if (get_file_length(argv[1], &(f.file_length)) == false) {
+    return EXIT_FAILURE;
   }
-  f.file_length = ftell(f.file);
-  if (f.file_length < 0) {
 
+  if (get_file_name(argv[1], f.file_name, &(f.file_name_length)) == false) {
+    return EXIT_FAILURE;
   }
-  rewind(f.file);
+
+  printf("argv : [%s], file_name : [%s], file_name_length : [%d], file_length : [%ld]\n", argv[1], f.file_name, f.file_name_length, f.file_length);
 
   memset(&hints, 0, sizeof(hints));
   hints.ai_family = AF_UNSPEC; /* Either IPv4 or IPv6 */
@@ -78,13 +80,11 @@ int main(int argc, char **argv) {
     sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
     if (sockfd < 0) {
       handle_socket_error();
-      fclose(f.file);
       continue;
     }
 
     if (connect(sockfd, p->ai_addr, p->ai_addrlen) < 0) {
       handle_connect_error();
-      fclose(f.file);
       close(sockfd);
       continue;
     }

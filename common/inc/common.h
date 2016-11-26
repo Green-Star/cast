@@ -8,6 +8,7 @@
 
 static inline void serialize_long(long _long, char *_buffer);
 static inline long deserialize_long(char *_buffer);
+static inline char get_file_separator();
 
 static inline void serialize_long(long _long, char *_buffer) {
   uint64_t be_long;
@@ -30,4 +31,14 @@ static inline long deserialize_long(char *_buffer) {
     be_long |= _buffer[i];
   }
   return be64toh(be_long);
+}
+
+static inline char get_file_separator() { 
+#ifdef _WIN32
+  return '\\';
+#elif __linux__
+  return '/';
+#else
+  #error "Unknown OS file separator !" 
+#endif
 }
