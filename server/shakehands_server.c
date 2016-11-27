@@ -3,7 +3,8 @@
 bool shakehands_server(int sockfd, struct cast_file_server *_info) {
   char buffer[SHAKEHAND_PACKET_SIZE];
   char path[PATH_LENGTH];
-  int ret, ret_total;
+  ssize_t ret;
+  size_t ret_total;
   char protocol;
   char force_upload;
   long title_length;
@@ -24,6 +25,11 @@ bool shakehands_server(int sockfd, struct cast_file_server *_info) {
   /* Shakehanding is initiated by the client */
   do {
     ret = recv(sockfd, (void*)buffer, SHAKEHAND_PACKET_SIZE, 0);
+    if (ret < 0) {
+      perror("recv");
+      return false;
+    }
+    
     ret_total += ret;
   } while(ret_total < SHAKEHAND_PACKET_SIZE);
 
@@ -81,6 +87,11 @@ bool shakehands_server(int sockfd, struct cast_file_server *_info) {
   serialize_long(error_code, buffer);
   do {
     ret = send(sockfd, (void*)buffer, SHAKEHAND_PACKET_SIZE, 0);
+    if (ret < 0) {
+      perror("recv");
+      return false;
+    }
+    
     ret_total += ret;
   } while(ret_total < SHAKEHAND_PACKET_SIZE);
   

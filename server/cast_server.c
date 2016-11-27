@@ -13,6 +13,7 @@ int main(int argc, char **argv) {
   sockfd = strtol(argv[1], NULL, 10);
 
   if (shakehands_server(sockfd, &upload_file) == false) {
+    close(sockfd);
     return EXIT_FAILURE;
   }
 
