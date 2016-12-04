@@ -6,6 +6,8 @@
 #include "common_defines.h"
 #include "common_types.h"
 
+#include "handle_error.h"
+
 static inline void serialize_long(long _long, char *_buffer);
 static inline long deserialize_long(char *_buffer);
 static inline char get_file_separator();

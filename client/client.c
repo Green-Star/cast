@@ -12,25 +12,10 @@
 #include "common.h"
 
 static void usage(char *_argv0);
-static void handle_socket_error();
-static void handle_connect_error();
-static void handle_fopen_error();
 
 static void usage(char *_argv0) {
   fprintf(stderr, "Usage : %s <file> <address> <port>\n", _argv0);
   fprintf(stderr, "  options : Not Implemented Yet\n");
-}
-
-static void handle_socket_error() {
-  perror("socket");
-}
-
-static void handle_connect_error() {
-  perror("connect");
-}
-
-static void handle_fopen_error() {
-  perror("fopen");
 }
 
 int main(int argc, char **argv) {

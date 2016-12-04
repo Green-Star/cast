@@ -9,35 +9,8 @@
 
 #include "common.h"
 
-static void usage(char *_argv0);
-static void handle_socket_error();
-static void handle_bind_error();
-static void handle_listen_error();
-static void handle_accept_error();
-static void handle_fork_error();
-
 static void usage(char *_argv0) {
   fprintf(stderr, "Usage : %s <port to listen>\n", _argv0);
-}
-
-static void handle_socket_error() {
-  perror("socket");
-}
-
-static void handle_bind_error() {
-  perror("bind");
-}
-
-static void handle_listen_error() {
-  perror("listen");
-}
-
-static void handle_accept_error() {
-  perror("accept");
-}
-
-static void handle_fork_error() {
-  perror("fork");
 }
 
 int main(int argc, char **argv) {

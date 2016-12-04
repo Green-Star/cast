@@ -1,16 +1,5 @@
 #include "shakehands_client.h"
 
-static void handle_send_error();
-static void handle_recv_error();
-
-static void handle_send_error() {
-  perror("send");
-}
-
-static void handle_recv_error() {
-  perror("recv");
-}
-
 void shakehands_client(int _sockfd, struct cast_file _file_to_send) {
   char buffer[SHAKEHAND_PACKET_SIZE];
   char path[FILE_LENGTH];
