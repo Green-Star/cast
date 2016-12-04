@@ -47,3 +47,6 @@ static inline void handle_recv_error() {
   print_error("recv");
 }
 
+static inline void handle_getsockopt_error() {
+  print_error("getsockopt");
+}

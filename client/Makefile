@@ -6,7 +6,7 @@ HEADDIR=./inc
 COMMONDIR=../common
 HEADCOMMONDIR=$(COMMONDIR)/inc
 _HEADERS=$(ls ($HEADDIR)/*)
-_OBJ=client.o config.o shakehands_client.o common.o file.o
+_OBJ=client.o config.o shakehands_client.o common.o file.o cast_file.o
 
 CC=gcc
 CFLAGS=-Wall -Wextra -O2 -g -pthread -I$(HEADDIR) -I$(HEADCOMMONDIR)

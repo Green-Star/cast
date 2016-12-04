@@ -1,11 +1,12 @@
 #include "shakehands_client.h"
 
-void shakehands_client(int _sockfd, struct cast_file _file_to_send) {
+bool shakehands_client(int _sockfd, struct cast_file _file_to_send) {
   char buffer[SHAKEHAND_PACKET_SIZE];
   char path[FILE_LENGTH];
   size_t total_sent, total_received;
   ssize_t sent, received;
   long error_code;
+  bool ret;
   
   buffer[0] = 0; /* TODO : Replace it with protocol (in a common header) */
   buffer[1] = 1; /* TODO : Replace it with the value of --force-upload */
@@ -47,10 +48,12 @@ void shakehands_client(int _sockfd, struct cast_file _file_to_send) {
   switch (error_code) {
     case SERVER_OK :
       printf("File already uploaded on the server\n");
+      ret = false;
       break;
 
     case SERVER_UPLOAD :
       printf("Uploading file\n");
+      ret = true;
       break;
       
     case SERVER_ERROR :
@@ -62,5 +65,5 @@ void shakehands_client(int _sockfd, struct cast_file _file_to_send) {
       break;
   }
   
-  return;
+  return ret;
 }

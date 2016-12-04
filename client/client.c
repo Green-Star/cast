@@ -6,10 +6,11 @@
 #include <unistd.h>
 #include <netdb.h>
 
+#include "common.h"
 #include "config.h"
 #include "shakehands_client.h"
 #include "file.h"
-#include "common.h"
+#include "cast_file.h"
 
 static void usage(char *_argv0);
 
@@ -21,6 +22,7 @@ static void usage(char *_argv0) {
 int main(int argc, char **argv) {
   int sockfd;
   int error;
+  bool upload, upload_complete;
   struct addrinfo hints, result;
   struct addrinfo *info, *p;
   struct cast_file f;
@@ -32,7 +34,7 @@ int main(int argc, char **argv) {
 
   get_config();
 
-  f.file = fopen(argv[1], "r");
+  f.file = fopen(argv[1], "rb");
   if (f.file == NULL) {
     handle_fopen_error();
     return EXIT_FAILURE;
@@ -88,12 +90,18 @@ int main(int argc, char **argv) {
 
   freeaddrinfo(info);
   
-  printf("[client] Connection established, we're going to shake hands\n");
-  shakehands_client(sockfd, f);
+  upload = shakehands_client(sockfd, f);
+
+  if (upload) {
+    upload_complete = cast_file(sockfd, f);
+  }
+  else {
+    upload_complete = true;
+  }
 
   fclose(f.file);
   
   close(sockfd);
   
-  return EXIT_SUCCESS;
+  return (upload_complete) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
