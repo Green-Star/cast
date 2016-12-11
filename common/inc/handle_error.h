@@ -15,6 +15,10 @@ static inline void handle_fopen_error() {
   print_error("fopen");
 }
 
+static inline void handle_fdopen_error() {
+  print_error("fdopen");
+}
+
 static inline void handle_fork_error() {
   perror("fork");
 }

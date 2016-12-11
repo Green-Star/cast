@@ -9,6 +9,7 @@ bool cast_file(int _sockfd, struct cast_file _file) {
   socklen_t buffer_length_size;
 
   total_bytes_sent = 0;
+  buffer = NULL;
   buffer_length_size = sizeof(buffer_length);
   if (getsockopt(_sockfd, SOL_SOCKET, SO_SNDBUF, (void*)&buffer_length, &buffer_length_size) < 0) {
     handle_getsockopt_error();

@@ -17,6 +17,13 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
+  /* Start receiver part */
+  if (upload_file.upload) {
+
+  }
+
+  /* Start streaming part */
+  
   close(sockfd);
 
   return EXIT_SUCCESS;
