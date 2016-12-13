@@ -54,3 +54,11 @@ static inline void handle_recv_error() {
 static inline void handle_getsockopt_error() {
   print_error("getsockopt");
 }
+
+static inline void handle_pthread_create_error() {
+  print_error("pthread_create");
+}
+
+static inline void handle_pthread_join_error() {
+  print_error("pthread_error");
+}
