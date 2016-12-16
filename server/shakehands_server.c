@@ -51,7 +51,7 @@ bool shakehands_server(int sockfd, struct cast_file_server *_info) {
   if (force_upload == 0) {
     file_found = search_file(path, file_length);
   }
-
+  
   memset((void*)buffer, 0, sizeof(buffer));
   
   /* Send SERVER_UPLOAD (we need to send the file) */
@@ -59,7 +59,7 @@ bool shakehands_server(int sockfd, struct cast_file_server *_info) {
     _info->upload = true;
 
     /* First we create the file */
-    fd = open(path, O_WRONLY | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
+    fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
     _info->fd = fd;
     
     /* If an error occured, we inform the client by sending SERVER_ERROR */
