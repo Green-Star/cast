@@ -10,6 +10,9 @@ static inline void print_error(char *_msg) {
   return;
 }
 
+static inline void handle_sigaction_error() {
+  print_error("sigaction");
+}
 
 static inline void handle_fopen_error() {
   print_error("fopen");

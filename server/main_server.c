@@ -6,8 +6,20 @@
 #include <netdb.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <signal.h>
+#include <errno.h>
 
 #include "common.h"
+
+void sigchild_handler() {
+  int saved_errno;
+
+  saved_errno = errno; /* errno might be erased by waitpid */
+
+  while(waitpid(-1, NULL, WNOHANG) > 0); /* Reap all sons zombies processes */
+  errno = saved_errno;
+}
+
 
 static void usage(char *_argv0) {
   fprintf(stderr, "Usage : %s <port to listen>\n", _argv0);
@@ -24,6 +36,7 @@ int main(int argc, char **argv) {
   struct sockaddr_storage client_addr;
   socklen_t client_len;
   char clientfd_param[3];
+  struct sigaction sa;
 
   if (argc < 2) {
     usage(argv[0]);
@@ -79,12 +92,18 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
+  /* Setting up the son's processes handling  */
+  sa.sa_handler = sigchild_handler;
+  sigemptyset(&sa.sa_mask);
+  sa.sa_flags = SA_RESTART;
+  if (sigaction(SIGCHLD, &sa, NULL) < 0) {
+    handle_sigaction_error();
+    close(sockfd);
+    return EXIT_FAILURE;
+  }
   
   /* Main loop (accept connection and fork to a child process) */
-  while(1) {
-
-    while(waitpid(-1, NULL, WNOHANG) > 0); /* Reap all sons zombies processes */
-    
+  while(1) {    
     client_len = sizeof(client_addr);
     clientfd = accept(sockfd, (struct sockaddr*)&client_addr, &client_len);
     if (clientfd < 0) {
