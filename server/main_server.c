@@ -131,6 +131,7 @@ int main(int argc, char **argv) {
 
     /* Parent does not need to interact with the client */
     close(clientfd);
+    printf("%s [%d], son forked to pid %d\n", argv[0], getpid(), pid);
   }
   
   return EXIT_SUCCESS;
