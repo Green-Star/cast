@@ -66,7 +66,8 @@ void *cast_receiver(void *_arg) {
     } while(bytes_to_write > 0);
     total_bytes_read += bytes_read;
 
-    printf("\rBytes written : %ld/%ld (%ld%%)", total_bytes_read, upload->file.file_length, ((total_bytes_read * 100) / upload->file.file_length));
+    *(upload->upload_percentage) = ((total_bytes_read * 100) / upload->file.file_length);
+    printf("\rBytes written : %ld/%ld (%d%%)", total_bytes_read, upload->file.file_length, *(upload->upload_percentage));
   } while(total_bytes_read < (size_t)upload->file.file_length);
 
   printf("\nUpload complete\n");

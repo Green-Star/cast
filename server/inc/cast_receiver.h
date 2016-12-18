@@ -10,7 +10,7 @@ struct cast_receiver {
   struct cast_file file;
   int filefd;
   int sockfd;
-  double *upload_percentage;
+  int *upload_percentage;
 };
 
   

@@ -14,6 +14,7 @@ int main(int argc, char **argv) {
   struct cast_receiver receiver_file;
   pthread_t receiver_thread_id;
   int *receiver_thread_return_code;
+  int upload_percentage;
 
   sockfd = strtol(argv[1], NULL, 10);
  
@@ -25,6 +26,7 @@ int main(int argc, char **argv) {
   receiver_file.file = upload_file.file;
   receiver_file.filefd = upload_file.fd;
   receiver_file.sockfd = sockfd;
+  receiver_file.upload_percentage = &upload_percentage;
   
   /* Start receiver part */
   if (upload_file.upload) {
