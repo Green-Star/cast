@@ -14,6 +14,8 @@ bool shakehands_client(int _sockfd, struct cast_file _file_to_send) {
   strcpy(buffer + 10, _file_to_send.file_name);
   serialize_long(_file_to_send.file_length, buffer + 10 + _file_to_send.file_name_length);
 
+  printf("file_length sent : %ld\n", _file_to_send.file_length);
+  
   printf("Shakehanding with the server ...\n");
   
   total_sent = 0;

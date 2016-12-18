@@ -28,10 +28,11 @@ static inline long deserialize_long(char *_buffer) {
   int i;
 
   be_long = 0L;
-  for(i = 0; i < 8; i++) {
+  for(i = 0; i < 8; i++) {    
     be_long <<= 8;
-    be_long |= _buffer[i];
+    be_long |= _buffer[i] & 255; /* We just want to have the least byte so we nullify all others bytes before OR bitwise */ 
   }
+  
   return be64toh(be_long);
 }
 

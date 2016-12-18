@@ -8,7 +8,7 @@ _OBJ_MAIN=main_server.o
 _OBJ_CAST=cast_server.o shakehands_server.o cast_receiver.o common.o
 
 CC=gcc
-CFLAGS=-Wall -Wextra -O2 -g -pthread -I$(HEADDIR) -I$(HEADCOMMONDIR)
+CFLAGS=-Wall -Wextra -g -pthread -I$(HEADDIR) -I$(HEADCOMMONDIR)
 
 all: $(BINDIR)/main_server $(BINDIR)/cast_server 
 
