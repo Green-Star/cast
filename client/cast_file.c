@@ -26,7 +26,7 @@ bool cast_file(int _sockfd, struct cast_file _file) {
     return false;
   }
 
-  printf("Starting uploading of %s\n", _file.file_name);
+  printf("Starting uploading of %s (%ld bytes)\n", _file.file_name, _file.file_length);
 
   do {
     /* Read file data */
@@ -52,7 +52,6 @@ bool cast_file(int _sockfd, struct cast_file _file) {
 	return false;
       }
 
-      sleep(1);
       current_bytes_sent += bytes_sent;
     } while(current_bytes_sent < bytes_read);
 

@@ -35,7 +35,7 @@ void *cast_receiver(void *_arg) {
     return (void*)EXIT_FAILURE;
   }
 
-  printf("Starting receiving of %s\n", upload->file.file_name);
+  printf("Starting receiving of %s (%ld bytes)\n", upload->file.file_name, upload->file.file_length);
   
   do {
     bytes_read = recv(upload->sockfd, (void*)buffer, buffer_size, 0);
