@@ -29,15 +29,30 @@ bool cast_file(int _sockfd, struct cast_file _file) {
   printf("Starting uploading of %s\n", _file.file_name);
 
   do {
+    printf("************************* LOOP ***************************\n");
     /* Read file data */
-    bytes_read = fread((void*)buffer, buffer_size, (size_t)1, _file.file);
+    bytes_read = fread((void*)buffer, (size_t)1, buffer_size, _file.file);
+    if (ferror(_file.file) != 0) {
+      print_error("fread");
+      fprintf(stderr, "Aborting upload\n");
+      free(buffer);
+      return false;
+    }
+
+    sleep(1);
+    
     current_bytes_sent = 0;
+
+  printf("buffer_size : %ld\n", buffer_size);
+    printf("bytes_read : [%ld]\n", bytes_read);
 
     /* Send it to the server */
     /* We send all the data read before fetching new ones */
     do {
       bytes_sent = send(_sockfd, (void*)buffer, bytes_read, 0);
 
+      printf("bytes_sent : %ld\n", bytes_sent);
+      
       if (bytes_sent < 0) {
 	print_error("\rError in send");
 	fprintf(stderr, "Aborting upload\n");
@@ -46,11 +61,16 @@ bool cast_file(int _sockfd, struct cast_file _file) {
       }
       
       current_bytes_sent += bytes_sent;
+
+      printf("current_bytes_sent : %ld (bytes_read : %ld)\n", current_bytes_sent, bytes_read);
     } while(current_bytes_sent < bytes_read);
 
     total_bytes_sent += current_bytes_sent;
 
+    printf("total_bytes_sent : %ld (file_length : %ld)\n", total_bytes_sent, _file.file_length);
+
     printf("\rBytes sent : %ld/%ld (%ld%%)", total_bytes_sent, _file.file_length, (total_bytes_sent / _file.file_length));
+    printf("******************************* END_LOOP *************************\n");
   } while(total_bytes_sent < (size_t)_file.file_length);
   
   free(buffer);

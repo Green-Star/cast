@@ -51,7 +51,7 @@ void *cast_receiver(void *_arg) {
 
     bytes_to_write = bytes_read;
     do {
-      current_bytes_written = fwrite((void*)buffer, bytes_to_write, (size_t)1, upload->file.file);
+      current_bytes_written = fwrite((void*)buffer, (size_t)1, bytes_to_write, upload->file.file);
 
       if (current_bytes_written == 0) {
 	print_error("\rError in fwrite");
