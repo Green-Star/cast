@@ -61,8 +61,10 @@ bool cast_file(int _sockfd, struct cast_file _file) {
     printf("\rBytes sent : %ld/%ld (%ld%%)", total_bytes_sent, _file.file_length, ((total_bytes_sent * 100) / _file.file_length));
     fflush(stdout);
   } while(total_bytes_sent < (size_t)_file.file_length);
-  
+
   free(buffer);
+
+  printf("\nUpload complete\n");
   
   return true;
 }

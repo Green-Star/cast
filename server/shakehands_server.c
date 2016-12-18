@@ -34,21 +34,12 @@ bool shakehands_server(int sockfd, struct cast_file_server *_info) {
     
     ret_total += ret;
   } while(ret_total < SHAKEHAND_PACKET_SIZE);
-
-  printf("Sleeping ...\n");
-  sleep(20);
   
   protocol = buffer[0];
   force_upload = buffer[1];
   title_length = deserialize_long(buffer + 2);
   title = &buffer[10];
   file_length = deserialize_long(buffer + 10 + title_length);
-
-  for(int i = 0; i < 8; i++){
-    printf("b[%d] : %c (%d)\n", i, *(buffer + 10 + title_length + i), (unsigned int)*(buffer + 10 + title_length + i));
-  }
-  printf("Total : %ld\n", file_length);
-
   
   strcpy(path, default_directory);
   strcat(path, file_separator);
