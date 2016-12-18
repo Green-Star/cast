@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
   int *receiver_thread_return_code;
 
   sockfd = strtol(argv[1], NULL, 10);
-
+ 
   if (shakehands_server(sockfd, &upload_file) == false) {
     close(sockfd);
     return EXIT_FAILURE;
@@ -24,6 +24,7 @@ int main(int argc, char **argv) {
 
   receiver_file.file = upload_file.file;
   receiver_file.filefd = upload_file.fd;
+  receiver_file.sockfd = sockfd;
   
   /* Start receiver part */
   if (upload_file.upload) {
