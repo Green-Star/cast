@@ -5,13 +5,6 @@
 #include <sys/socket.h>
 
 #include "common.h"
-
-struct cast_receiver {
-  struct cast_file file;
-  int filefd;
-  int sockfd;
-  int *upload_percentage;
-};
-
+#include "server_types.h"
   
 void * cast_receiver(void *_arg);

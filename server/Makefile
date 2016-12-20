@@ -5,7 +5,7 @@ COMMONDIR=../common
 HEADCOMMONDIR=$(COMMONDIR)/inc
 _HEADERS=$(ls ($HEADDIR)/*)
 _OBJ_MAIN=main_server.o
-_OBJ_CAST=cast_server.o shakehands_server.o cast_receiver.o common.o
+_OBJ_CAST=cast_server.o shakehands_server.o cast_receiver.o cast_streaming.o common.o command_vlc.o write_pipe.o
 
 CC=gcc
 CFLAGS=-Wall -Wextra -g -pthread -I$(HEADDIR) -I$(HEADCOMMONDIR)

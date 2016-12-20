@@ -23,7 +23,11 @@ static inline void handle_fdopen_error() {
 }
 
 static inline void handle_fork_error() {
-  perror("fork");
+  print_error("fork");
+}
+
+static inline void handle_pipe_error() {
+  print_error("pipe");
 }
 
 static inline void handle_socket_error() {
@@ -35,15 +39,15 @@ static inline void handle_connect_error() {
 }
 
 static inline void handle_bind_error() {
-  perror("bind");
+  print_error("bind");
 }
 
 static inline void handle_listen_error() {
-  perror("listen");
+  print_error("listen");
 }
 
 static inline void handle_accept_error() {
-  perror("accept");
+  print_error("accept");
 }
 
 static inline void handle_send_error() {
