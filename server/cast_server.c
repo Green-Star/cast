@@ -54,6 +54,11 @@ int main(int argc, char **argv) {
   {
     handle_pthread_join_error();
   }
+
+  if (pthread_join(streaming_thread_id, (void**)&streaming_thread_return_code) != 0)
+  {
+    handle_pthread_join_error();
+  }
   
   close(sockfd);
 
