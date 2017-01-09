@@ -26,6 +26,10 @@ static inline void handle_fork_error() {
   print_error("fork");
 }
 
+static inline void handle_execlp_error() {
+  print_error("execlp");
+}
+
 static inline void handle_pipe_error() {
   print_error("pipe");
 }

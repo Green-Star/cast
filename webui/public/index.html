@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon titre</title>
+</head>
+<body>
+  <div>
+    <div>
+      Upload status
+      <span class="upload-container">
+	<progress id="upload_bar" value="50" max="100"></progress>
+	<span id="upload_complete">Upload complete</span>
+      </span>
+    </div>
+    <div>
+      Video control
+      <div>
+	Progress bar with movie position
+      </div>
+      <div>
+	Add video control here
+      </div>
+    </div>
+    <div>
+      <progress id="audio_bar" value="50" max="100"></progress>
+      <form action="audio" method="post">
+	<fieldset>
+	  <legend>Audio control</legend>
+	  <div>
+	    <button name="volume" value="0">Mute</button>
+	    <button name="volume" value="25">25</button>
+	    <button name="volume" value="50">50</button>
+	    <button name="volume" value="75">75</button>
+	    <button name="volume" value="100">100</button>
+	  </div>
+	  <div>
+	    <button name="volume" value="-10" formmethod="get">-10</button>
+	    <button name="volume" value="-5" formmethod="get">-5</button>
+	    <button name="volume" value="-1" formmethod="get">-1</button>
+	    <button name="volume" value="1" formmethod="get">+1</button>
+	    <button name="volume" value="5" formmethod="get">+5</button>
+	    <button name="volume" value="10" formmethod="get">+10</button>
+	  </div>
+	</fieldset>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/client.js" type="text/javascript"></script>
+</body>
+</html>

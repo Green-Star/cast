@@ -75,17 +75,50 @@ void * cast_streaming(void *_arg) {
     strcat(path, stream->file.file_name);
 
     execlp("vlc", "vlc", "-I", "rc", path, (char*) NULL);
-    print_error("execlp");
+    handle_execlp_error();
     return (void*)EXIT_FAILURE;
   }
   /* Parent process */
-  else {
+    else {
     /* We're closing the read end of the parent -> child pipe */
     close(parent_to_child_pipe[0]);
     /* and the write end of the child -> parent pipe */
     close(child_to_parent_pipe[1]);    
 
+    
+    
     /* TODO : Try communication with VLC */
+    char in[100];
+    char dummy[100];
+    
+    bool t;
+    t = true;
+
+    write_pipe(parent_to_child_pipe[1], "pause\n");
+    sleep(1);
+    write_pipe(parent_to_child_pipe[1], "fullscreen\n");
+    
+    do {
+    fscanf(stdin, "%s", in);
+
+    if (strcmp(in, "pause") == 0) {
+      write_pipe(parent_to_child_pipe[1], "pause\n");
+      //read_pipe(child_to_parent_pipe[0], dummy); 
+      //printf("%s", dummy);
+    }
+    else if(strcmp(in, "play") == 0) {
+      write_pipe(parent_to_child_pipe[1], "play\n");
+      //read_pipe(child_to_parent_pipe[0], dummy);
+      //printf("%s", dummy);
+    }
+    else if (strcmp(in, "quit") == 0 || strcmp(in, "shutdown") == 0) {
+      write_pipe(parent_to_child_pipe[1], "shutdown\n");
+      t =false;
+    }
+    in[0] = 0;
+    
+  } while(t);
+    
     
     waitpid(-1, NULL, 0);
     return (void*)EXIT_SUCCESS;
