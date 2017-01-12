@@ -46,8 +46,30 @@
 	</fieldset>
       </form>
     </div>
+    <div>
+    <div>
+      <select id="video_tracks">
+	<option selected disabled hidden>Video track</option>
+	<option>1</option>
+      </select>
+    </div>
+    <div>
+      <select id="audio_tracks">
+	<option selected disabled hidden>Audio track</option>
+	<option>1</option>
+	<option>2</option>
+      </select>
+    </div>
+    <div>
+      <select id="subtitles_tracks">
+	<option selected disabled hidden>Subtitle track</option>
+      </select>
+    </div>
+    </div>
   </div>
 
   <script src="js/client.js" type="text/javascript"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="js/updateData.js" type="text/javascript"></script>
 </body>
 </html>

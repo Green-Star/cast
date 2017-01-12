@@ -15,9 +15,13 @@ class APIData {
 }
 
 var internalData;
+var eventHandler;
 
-function initData() {
+function initData(handler) {
     internalData = new APIData();
+    eventHandler = handler;
+    /* Start listening on process.stdin */
+    updateData();
 }
 
 function getAPIData() {
@@ -29,8 +33,16 @@ function getAPIData() {
     return internalData;
 }
 
-function updateData(data) {
-    /* Do stuff on process.stdin */
+function updateData() {
+    /* Wait for incoming data on process.stdin */
+    process.stdin.on("readable", () => {
+	var data = JSON.parse(process.stdin.read());
+	if (data !== null) {
+	    internalData = data;
+	    /* Send it to the client */
+	    eventHandler.emit('data updated', data);
+	}
+    });
 }
 
 exports.initData = initData;

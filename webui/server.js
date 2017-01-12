@@ -1,13 +1,20 @@
 var router = require("./router");
 var express = require("express");
-var app = express();
+var http = require("http");
 var bodyParser = require("body-parser");
 var dataHandler = require("./dataHandler");
+var io = require("socket.io");
 
 function start(port) {
+    var app = express();
+    var server = http.Server(app);
+    var connectionHandler = io(server);
+    
+    connectionHandler.on('connection', (socket) => console.log("Connection !"));
+    
     /* Initialize data and start listening on stdin for incoming data */
-    dataHandler.initData();
-
+    dataHandler.initData(connectionHandler);
+    
     /* Get all data/stuff of the body (POST) parameters */
     /* Parse application/json */
     app.use(bodyParser.json());
@@ -19,7 +26,7 @@ function start(port) {
     /* Set the static files location /public/index.html will be /index.html for users */
     app.use(express.static(__dirname + '/public')); 
     router.route(app);
-    app.listen(port);
+    server.listen(port);
     console.log("Server ready on port " + port);
 }
 

@@ -34,6 +34,16 @@ function clientUpdateData(data) {
 	document.getElementById("upload_complete").style.display = "none";
     }
 
+    var video_tracks = document.getElementById("video_tracks");
+    data.video_tracks.forEach(function(element) {
+	var option = document.createElement("option");
+	option.value = element.id;
+	option.name = element.name;
+	option.text = element.name + " - " + element.language;
+	option.selected = element.selected;
+	video_tracks.add(option);
+    });
+
     APIData = data;
 }
 
