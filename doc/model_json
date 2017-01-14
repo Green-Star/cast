@@ -1,0 +1,33 @@
+{
+"upload_progress":<number>	/* Current upload progress (between 0 and 100) */
+"upload_complete":<boolean>	/* true if upload is complete, false otherwise */
+"length":<number>		/* Film duration (in seconds) */
+"time":<number>			/* Current film timestamp (in seconds) */
+"volume":<number>		/* Current film volume */
+"video_tracks":[
+	{
+		"id":<number>,
+		"name":<string>,
+		"language":<string>, /* Can be FR, EN ou "Français", "Anglais" ? */
+		"selected":<boolean>
+	}
+]				/* List of the film's video tracks */
+"audio_tracks":[
+	{
+		"id":<number>,
+		"name":<string>,
+		"language":<string>,
+		"selected":<boolean>
+	}
+]				/* List of the film's audio tracks */
+"subtitles_tracks":[
+	{
+		"id":<number>,
+		"name":<string>,
+		"language":<string>,
+		"selected":<boolean>
+	}
+]				/* List of the film's subtitles track */
+}
+
+
