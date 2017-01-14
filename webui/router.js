@@ -28,6 +28,24 @@ function route(app) {
 	
 	res.redirect("/");	
     });
+
+    app.post("/video_tracks", function(req, res) {	
+	process.stdout.write("set_video_track " + req.body.video_tracks + "\n");
+	
+	res.redirect("/");
+    });
+
+    app.post("/audio_tracks", function(req, res) {
+	process.stdout.write("set_audio_track " + req.body.audio_tracks + "\n");
+
+	res.redirect("/");
+    });
+
+    app.post("/subtitles_tracks", function(req, res) {
+	process.stdout.write("set_subtitles_track " + req.body.subtitles_tracks + "\n");
+
+	res.redirect("/");
+    });
 }
 
 exports.route = route;
