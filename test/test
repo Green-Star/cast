@@ -1,0 +1,64 @@
+{
+"upload_progress":25, 
+"upload_complete":false, 
+"video_tracks":[
+	{
+		"id":-1,
+		"name":"Désactiver",
+		"language":"",
+		"selected":false
+	},
+	{
+		"id":0,
+		"name":"Piste 1",
+		"language":"English",
+		"selected":true
+	}
+],
+"audio_tracks":[
+	{
+		"id":-1,
+		"name":"Désactiver",
+		"language":"",
+		"selected":false	
+	},
+	{
+		"id":1, 
+		"name":"FR", 
+		"language":"Français", 
+		"selected":true
+	}, 
+	{
+		"id":2, 
+		"name":"EN", 
+		"language":"Anglais", 
+		"selected":false
+	}
+],
+"subtitles_tracks":[
+	{
+		"id":-1,
+		"name":"Désactiver",
+		"language":"",
+		"selected":true
+	},
+	{
+		"id":3,
+		"name":"FRF",
+		"language":"Français",
+		"selected":false
+	},
+	{
+		"id":4,
+		"name":"FR",
+		"language":"Français",
+		"selected":false
+	},
+	{
+		"id":5,
+		"name":"EN",
+		"language":"Anglais",
+		"selected":false
+	}
+]
+}
