@@ -9,8 +9,9 @@ function start(port) {
     var app = express();
     var server = http.Server(app);
     var connectionHandler = io(server);
-    
-    connectionHandler.on('connection', (socket) => console.log("Connection !"));
+
+    /* Remember every connections */
+    connectionHandler.on('connection', (socket) => {});
     
     /* Initialize data and start listening on stdin for incoming data */
     dataHandler.initData(connectionHandler);
@@ -27,7 +28,6 @@ function start(port) {
     app.use(express.static(__dirname + '/public')); 
     router.route(app);
     server.listen(port);
-    console.log("Server ready on port " + port);
 }
 
 exports.start = start;

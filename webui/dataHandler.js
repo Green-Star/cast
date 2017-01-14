@@ -25,11 +25,6 @@ function initData(handler) {
 }
 
 function getAPIData() {
-    internalData.upload_progress += 30;
-    if (internalData.upload_progress >= 100) {
-	internalData.upload_progress = 100;
-	internalData.upload_complete = true;
-    }
     return internalData;
 }
 
