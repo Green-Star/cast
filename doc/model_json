@@ -1,8 +1,9 @@
 {
 "upload_progress":<number>	/* Current upload progress (between 0 and 100) */
 "upload_complete":<boolean>	/* true if upload is complete, false otherwise */
-"length":<number>		/* Film duration (in seconds) */
+"is_playing":<boolean>		/* true if the film is playing, false it is paused */
 "time":<number>			/* Current film timestamp (in seconds) */
+"length":<number>		/* Film duration (in seconds) */
 "volume":<number>		/* Current film volume */
 "video_tracks":[
 	{

@@ -4,13 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mon titre</title>
+
+  <style>
+    .display-none {
+    	display: none;
+    }
+    .display-inline {
+    	display: inline;
+    }
+  </style>  
 </head>
 <body>
   <div>
     <div>
       Upload status
       <span class="upload-container">
-	<progress id="upload_bar" value="50" max="100"></progress>
+	<progress id="upload_bar" value="0" max="100"></progress>
 	<span id="upload_complete">Upload complete</span>
       </span>
     </div>
@@ -19,12 +28,44 @@
       <div>
 	Progress bar with movie position
       </div>
-      <div>
-	Add video control here
+      <div class="video-container">
+	<div class="progress-bar-container">
+	  <span id="time_value"></span>
+	  <span id="video_bar">
+	    <progress id="video_progress_bar" value="0"></progress>
+	  </span>
+	  <span id="length_value"></span>
+	</div>
+	<div id="video-controls-container">
+	  <span id="film-controls-container">
+	    <form action="rewind" method="post" class="display-inline">
+	      <button idp="rewind_button" name="rewind" value="rewind">Rewind</button>
+	    </form>
+	    <form action="pause" method="post" class="display-inline">
+	      <button id="pause_button" name="pause" value="pause" class="display-inline">&#9647;&#9647;</button>
+	    </form>
+	    <form action="pause" method="get" class="display-none">
+	      <button id="play_button" name="play" value="play" class="display-none">&#9655;</button>
+	    </form>
+	    <form action="stop" class="display-inline">
+	      <button id="stop_button" name="stop" value="stop">Stop &#9723;</button>
+	    </form>
+	  </span>
+	  <span class="video-time-controls-container">
+	    <form action="video" method="get">
+	      <button name="time" value="-60">-60</button>
+	      <button name="time" value="-30">-30</button>
+	      <button name="time" value="-5">-5</button>
+	      <button name="time" value="5">+5</button>
+	      <button name="time" value="30">+30</button>
+	      <button name="time" value="60">+60</button>
+	    </form>
+	  </span>
+	</div>
       </div>
     </div>
     <div>
-      <progress id="audio_bar" value="50" max="100"></progress>
+      <progress id="audio_bar" value="0" max="100"></progress>
       <form action="audio" method="post">
 	<fieldset>
 	  <legend>Audio control</legend>

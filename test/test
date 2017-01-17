@@ -1,6 +1,9 @@
 {
 "upload_progress":25, 
 "upload_complete":false, 
+"is_playing":true,
+"time":0,
+"length":1536,
 "video_tracks":[
 	{
 		"id":-1,

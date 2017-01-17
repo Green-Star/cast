@@ -14,13 +14,31 @@ function updateSelect(select, element) {
 
 function clientUpdateData(data) {
    if (data.upload_complete === true) {
-	document.getElementById("upload_bar").style.display = "none";
-	document.getElementById("upload_complete").style.display = "inline";
+	document.getElementById("upload_bar").className = "display-none";
+	document.getElementById("upload_complete").className = "display-inline";
     }
     else {
 	document.getElementById("upload_bar").value = data.upload_progress;
-	document.getElementById("upload_bar").style.display = "inline";
-	document.getElementById("upload_complete").style.display = "none";
+	document.getElementById("upload_bar").className = "display-inline";
+	document.getElementById("upload_complete").className = "display-none";
+    }
+
+    document.getElementById("time_value").innerHTML = data.time;
+    document.getElementById("video_progress_bar").value = data.time;
+    document.getElementById("video_progress_bar").max = data.length;
+    document.getElementById("length_value").innerHTML = data.length;
+    
+    if (data.is_playing === true) {
+	document.getElementById("pause_button").className = "display-inline";
+	document.getElementById("pause_button").form.className = "display-inline";
+	document.getElementById("play_button").className = "display-none";
+	document.getElementById("play_button").form.className = "display-none";
+    }
+    else {
+	document.getElementById("pause_button").className = "display-none";
+	document.getElementById("pause_button").form.className = "display-none";
+	document.getElementById("play_button").className = "display-inline";
+	document.getElementById("play_button").form.className = "display-inline";
     }
 
     var video_tracks = document.getElementById("video_tracks");

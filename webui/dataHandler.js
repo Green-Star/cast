@@ -2,12 +2,12 @@
 
 class APIData {
     constructor() {
-	this.upload_complete = false;
 	this.upload_progress = 0;
+	this.upload_complete = false;
+	this.is_playing = false;
 	this.time = 0;
 	this.length = 0;
 	this.volume = 100;
-	this.play = false;
 	this.video_tracks = [];
 	this.audio_tracks = [];
 	this.subtitles_tracks = [];
