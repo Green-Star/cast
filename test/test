@@ -4,6 +4,7 @@
 "is_playing":true,
 "time":0,
 "length":1536,
+"volume":25,
 "video_tracks":[
 	{
 		"id":-1,

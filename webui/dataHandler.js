@@ -7,7 +7,7 @@ class APIData {
 	this.is_playing = false;
 	this.time = 0;
 	this.length = 0;
-	this.volume = 100;
+	this.volume = 0;
 	this.video_tracks = [];
 	this.audio_tracks = [];
 	this.subtitles_tracks = [];

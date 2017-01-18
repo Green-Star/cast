@@ -12,6 +12,21 @@ function updateSelect(select, element) {
     select.add(option);
 }
 
+function getFormattedTime(seconds) {
+    var hours = seconds / 3600;
+    seconds %= 3600;
+    var minutes = seconds / 60;
+    seconds %= 60;
+    
+    var string = (hours >= 1) ? Math.trunc(hours) + ":" : "";
+    string += (minutes < 10) ? "0" : "";
+    string += Math.trunc(minutes) + ":";
+    string += (seconds < 10) ? "0" : "";
+    string += Math.trunc(seconds);
+
+    return string;
+}
+
 function clientUpdateData(data) {
    if (data.upload_complete === true) {
 	document.getElementById("upload_bar").className = "display-none";
@@ -23,10 +38,12 @@ function clientUpdateData(data) {
 	document.getElementById("upload_complete").className = "display-none";
     }
 
-    document.getElementById("time_value").innerHTML = data.time;
+    document.getElementById("audio_bar").value = data.volume;
+
+    document.getElementById("time_value").innerHTML = getFormattedTime(data.time);
     document.getElementById("video_progress_bar").value = data.time;
     document.getElementById("video_progress_bar").max = data.length;
-    document.getElementById("length_value").innerHTML = data.length;
+    document.getElementById("length_value").innerHTML = getFormattedTime(data.length);
     
     if (data.is_playing === true) {
 	document.getElementById("pause_button").className = "display-inline";

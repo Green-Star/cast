@@ -39,6 +39,36 @@ function route(app) {
 
 	res.redirect("/");
     });
+
+    app.post("/rewind", function(req, res) {
+	process.stdout.write("set_time 0\n");
+
+	res.redirect("/");
+    });
+
+    app.post("/pause", function(req, res) {
+	process.stdout.write("pause\n");
+
+	res.redirect("/");
+    });
+
+    app.get("/pause", function(req, res) {
+	process.stdout.write("play\n");
+
+	res.redirect("/");
+    });
+
+    app.post("/stop", function(req, res) {
+	process.stdout.write("stop\n");
+
+	res.redirect("/");
+    });
+
+    app.get("/video", function(req, res) {
+	process.stdout.write("add_time " + req.query.time + "\n");
+
+	res.redirect("/");
+    });
 }
 
 exports.route = route;
