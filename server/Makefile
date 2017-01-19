@@ -39,3 +39,6 @@ rebuild: clear clean all
 
 clear:
 	clear
+
+context: context.o
+	$(CC) $(CFLAGS) $^ -o $(BINDIR)/$@

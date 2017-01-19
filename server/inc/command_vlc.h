@@ -2,35 +2,30 @@
 
 #include <limits.h>
 #include "common.h"
+#include "server_types.h"
 #include "write_pipe.h"
 
-#define LANGUAGE_SIZE 20
+bool init_vlc(int _readfd, int _writefd);
 
-struct track{
-  int id;
-  char language[LANGUAGE_SIZE];
-} ;
+bool get_time_vlc(int _readfd, int _writefd, int *_new_time);
+bool set_time_vlc(int _readfd, int _writefd, int _time);
 
+bool get_length_vlc(int _readfd, int _writefd, int *_new_length);
 
-ssize_t init_vlc(int _writefd, int _readfd);
+bool get_volume_vlc(int _readfd, int _writefd, int *_new_volume);
+bool set_volume_vlc(int _readfd, int _writefd, int _volume);
 
-ssize_t pause_vlc(int _writefd);
-ssize_t play_vlc(int _writefd);
-ssize_t stop_vlc(int _writefd);
-ssize_t repeat_vlc(int _writefd, bool _repeat);
-ssize_t set_fullscreen_vlc(int _writefd);
+bool get_video_tracks_vlc(int _readfd, int _writefd, int *_nb_video_tracks, struct track **_new_video_tracks);
+bool set_video_track_vlc(int _readfd, int _writefd, struct track _video_track);
 
-ssize_t get_length_vlc(int _writefd, int _readfd, int *_length);
-ssize_t get_time_vlc(int _writefd, int _readfd, int *_time);
-ssize_t set_time_vlc(int _writefd, int _new_time);
+bool get_audio_tracks_vlc(int _reafd, int _writefd, struct track **_new_audio_tracks);
+bool set_audio_track_vlc(int _readfd, int _writefd, struct track _audio_track);
 
-ssize_t get_volume_vlc(int _writefd, int _readfd, int *_volume);
-ssize_t set_volume_vlc(int _writefd, int _volume);
-ssize_t mute(int _writefd);
+bool get_subtitles_tracks_vlc(int _reafd, int _writefd, struct track **_new_subtitles_tracks);
+bool set_subtitles_track_vlc(int _readfd, int _writefd, struct track _subtitles_track);
 
-ssize_t get_video_track_vlc(int _writefd, int _readfd, struct track *_video_tracks);
-ssize_t set_video_track_vlc(int _writefd, int _id_video_track);
-ssize_t get_audio_track_vlc(int _writefd, int _readfd, struct track *_audio_tracks);
-ssize_t set_audio_track_vlc(int _writefd, int _id_audio_track);
-ssize_t get_subtitles_track_vlc(int _writefd, int _readfd, struct track *_subtitles_tracks);
-ssize_t set_subtitles_track_vlc(int _writefd, int _id_subtitles_track);
+bool pause_vlc(int _readfd, int _writefd);
+bool play_vlc(int _readfd, int _writefd);
+bool stop_vlc(int _readfd, int _writefd);
+bool shutdown_vlc(int _readfd, int _writefd);
+bool set_fullscreen_vlc(int _readfd, int _writefd);

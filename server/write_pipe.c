@@ -4,7 +4,8 @@ static ssize_t send_pipe(int _pipe_fd, char const * const _buf, size_t const _le
 static void cat_string(char * const buffer, char const * const s, int *offset);
 static void cat_number(char * const buffer, int const number, int *offset);
 static void cat_double(char * const buffer, double const number, int *offset);
-static void cat_float(char * const buffer, float const number, int *offset);
+
+static void cat_double_with_decimals(char * const buffer, double const number, int *offset, int nb_decimals);
 
 static char numbers[10] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
@@ -18,6 +19,7 @@ ssize_t write_pipe(const int _pipe_fd, char const * const _fmt, ...) {
   int d;
   char c;
   char *sub_string;
+  double f;
 
   s = _fmt;
   offset = 0;
@@ -50,7 +52,12 @@ ssize_t write_pipe(const int _pipe_fd, char const * const _fmt, ...) {
 	  d = va_arg(ap, int);
 	  cat_number(buffer, d, &offset);
 	break;
-	
+
+	case 'f':
+	  f = va_arg(ap, double);
+	  cat_double(buffer, f, &offset);
+	  break;
+	  
         default:
 	  buffer[offset] = *s;
 	  offset++;
@@ -102,7 +109,8 @@ static void cat_number(char * const _buffer, int const _number, int *_offset) {
   number = _number;
 
   if (number == 0) {
-    _buffer[*_offset] = 0;
+    //    _buffer[*_offset] = 0;
+    _buffer[*_offset] = numbers[0];
     (*_offset)++;
     return;
   }
@@ -126,8 +134,31 @@ static void cat_number(char * const _buffer, int const _number, int *_offset) {
   }
 }
 
-static void cat_double(char * const buffer, double const number, int *offset);
-static void cat_float(char * const buffer, float const number, int *offset);
+static void cat_double(char * const buffer, double const number, int *offset) {
+  /* Print only 5 decimals */
+  cat_double_with_decimals(buffer, number, offset, 5);
+}
+
+static void cat_double_with_decimals(char * const buffer, double const number, int *offset, int nb_decimals) {
+  int floor;
+  int decimal;
+  double d;
+  int nb_decimal;
+
+  /* Print floor part */
+  floor = (int)number;
+  cat_number(buffer, floor, offset);
+  buffer[*offset] = '.';
+  (*offset)++;
+  
+  /* Print nb_decimals decimals */
+  d = number - floor;
+  for (nb_decimal = 0; nb_decimal < nb_decimals; nb_decimal++) {
+    d *= 10;
+  }
+  decimal = (int)d;
+  cat_number(buffer, decimal, offset);
+}
 
 ssize_t read_pipe(int const _pipefd, char * const _buffer) {
   char buf[PIPE_BUF];
