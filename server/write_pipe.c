@@ -109,7 +109,6 @@ static void cat_number(char * const _buffer, int const _number, int *_offset) {
   number = _number;
 
   if (number == 0) {
-    //    _buffer[*_offset] = 0;
     _buffer[*_offset] = numbers[0];
     (*_offset)++;
     return;
@@ -150,14 +149,23 @@ static void cat_double_with_decimals(char * const buffer, double const number, i
   cat_number(buffer, floor, offset);
   buffer[*offset] = '.';
   (*offset)++;
-  
+
   /* Print nb_decimals decimals */
   d = number - floor;
+  /* We don't want a negative sign on the decimal part */
+  if (d < 0) {
+    /* So we convert it to positive if we're below 0 */
+    d *= -1;
+  }
+
+  /* Print one decimal at a time */
+  /* Also we're gonne print '00000' instead of '0' (if we only call cat_number after the loop) */
   for (nb_decimal = 0; nb_decimal < nb_decimals; nb_decimal++) {
     d *= 10;
+    decimal = (int)d;
+    cat_number(buffer, decimal, offset);
+    d -= decimal;
   }
-  decimal = (int)d;
-  cat_number(buffer, decimal, offset);
 }
 
 ssize_t read_pipe(int const _pipefd, char * const _buffer) {
