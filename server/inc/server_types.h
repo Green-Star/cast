@@ -7,15 +7,15 @@ struct cast_receiver {
   int *upload_percentage;
 };
 
-#define LANGUAGE_SIZE 100
-#define NAME_SIZE 20
+#define LANGUAGE_SIZE 50
+#define NAME_SIZE 50
 
 struct track{
   int id;
   char name[NAME_SIZE];
   char language[LANGUAGE_SIZE];
   bool selected;
-} ;
+};
 
 struct context {
   int readfd;
