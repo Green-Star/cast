@@ -32,6 +32,7 @@ int parse_one_track(char *_string_track, struct track *_track) {
   int offset;
 
   memset((void*)_track, 0, sizeof(struct track));
+  memset((void*)id_buffer, 0, sizeof(id_buffer));
 
   /* Parse only one line */
   end_line = strstr(s, "\n");
@@ -320,7 +321,24 @@ bool set_video_track_vlc(int _readfd, int _writefd, struct track _video_track) {
   return true;
 }
 
-bool get_audio_tracks_vlc(int _reafd, int _writefd, struct track **_new_audio_tracks);
+bool get_audio_tracks_vlc(int _readfd, int _writefd, int *_nb_audio_tracks, struct track **_new_audio_tracks) {
+  char buf[PIPE_BUF];
+
+  if (write_pipe(_writefd, "atrack\n") < 0) {
+    return false;
+  }
+
+  if (read_pipe(_readfd, buf) < 0) {
+    return false;
+  }
+
+  if (parse_tracks(buf, _nb_audio_tracks, _new_audio_tracks) == false) {
+    return false;
+  }
+
+  return true;
+}
+
 bool set_audio_track_vlc(int _readfd, int _writefd, struct track _audio_track) {
   char buf[PIPE_BUF];
 
@@ -334,7 +352,25 @@ bool set_audio_track_vlc(int _readfd, int _writefd, struct track _audio_track) {
   return true;
 }
 
-bool get_subtitles_tracks_vlc(int _reafd, int _writefd, struct track **_new_subtitles_tracks);
+bool get_subtitles_tracks_vlc(int _readfd, int _writefd, int *_nb_subtitles_tracks, struct track **_new_subtitles_tracks) {
+  char buf[PIPE_BUF];
+
+  if (write_pipe(_writefd, "strack\n") < 0) {
+    return false;
+  }
+  
+  if (read_pipe(_readfd, buf) < 0) {
+    return false;
+  }
+
+  if (parse_tracks(buf, _nb_subtitles_tracks, _new_subtitles_tracks) == false)
+  {
+    return false;
+  }
+  
+  return true;
+}
+
 bool set_subtitles_track_vlc(int _readfd, int _writefd, struct track _subtitles_track) {
   char buf[PIPE_BUF];
   
