@@ -103,8 +103,19 @@ int main(int argc, char **argv) {
     }
 
     get_video_tracks_vlc(readfd, writefd, &nb_video_tracks, &video_tracks);
+    for (int i = 0; i < nb_video_tracks; i++) {
+      printf("{\"id\":%d,\"name\":\"%s\",\"language\":\"%s\",\"selected\":%s}\n", video_tracks[i].id, video_tracks[i].name, video_tracks[i].language, (video_tracks[i].selected) ? "true" : "false");
+    }
     sleep(1);
-    get_video_tracks_vlc(readfd, writefd, NULL, NULL);
+    get_audio_tracks_vlc(readfd, writefd, &nb_audio_tracks, &audio_tracks);
+    for (int i = 0; i < nb_audio_tracks; i++) {
+      printf("{\"id\":%d,\"name\":\"%s\",\"language\":\"%s\",\"selected\":%s}\n", audio_tracks[i].id, audio_tracks[i].name, audio_tracks[i].language, (audio_tracks[i].selected) ? "true" : "false");
+    }
+    sleep(1);
+    get_subtitles_tracks_vlc(readfd, writefd, &nb_subtitles_tracks, &subtitles_tracks);
+    for (int i = 0; i < nb_subtitles_tracks; i++) {
+      printf("{\"id\":%d,\"name\":\"%s\",\"language\":\"%s\",\"selected\":%s}\n", subtitles_tracks[i].id, subtitles_tracks[i].name, subtitles_tracks[i].language, (subtitles_tracks[i].selected) ? "true" : "false");
+    }
 
     do {
       fscanf(stdin, "%s", in);
