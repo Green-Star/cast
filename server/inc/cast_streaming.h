@@ -14,4 +14,6 @@
 #include "write_pipe.h"
 #include "command_vlc.h"
 
+#include "context.h"
+
 void * cast_streaming(void *_arg);
