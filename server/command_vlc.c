@@ -1,6 +1,6 @@
 #include "command_vlc.h"
 
-int get_nb_tracks(char *_string_tracks) {
+int get_nb_tracks_vlc(char *_string_tracks) {
   char *s = _string_tracks;
   int nb_tracks = 0;
   bool new_line = true;
@@ -24,7 +24,7 @@ int get_nb_tracks(char *_string_tracks) {
   return nb_tracks;
 }
 
-int parse_one_track(char *_string_track, struct track *_track) {
+int parse_one_track_vlc(char *_string_track, struct track *_track) {
   char *s = _string_track;
   char *ptr, *end_line;
   char id_buffer[LANGUAGE_SIZE];
@@ -150,14 +150,14 @@ int parse_one_track(char *_string_track, struct track *_track) {
   return nb_chars;
 }
 
-bool parse_tracks(char *_string_tracks, int *_nb_tracks, struct track **_tracks) {
+bool parse_tracks_vlc(char *_string_tracks, int *_nb_tracks, struct track **_tracks) {
   bool new_line;
   int nb_tracks, current_track, offset;
   char *s;
   struct track *tracks;
 
   /* Get number of tracks in the film */
-  nb_tracks = get_nb_tracks(_string_tracks);
+  nb_tracks = get_nb_tracks_vlc(_string_tracks);
 
   /* Realloc the _tracks structure */
   tracks = (struct track *)realloc((void*)*_tracks, nb_tracks * sizeof(struct track));
@@ -172,7 +172,7 @@ bool parse_tracks(char *_string_tracks, int *_nb_tracks, struct track **_tracks)
   
   while (*s) {
     if (*s == '|' && new_line == true) {
-      offset = parse_one_track(s, &(tracks[current_track]));
+      offset = parse_one_track_vlc(s, &(tracks[current_track]));
       current_track++;
       s += offset;
       continue;
@@ -217,6 +217,9 @@ bool init_vlc(int _readfd, int _writefd) {
   if (read_pipe(_readfd, buf) < 0) {
     return false;
   }
+
+  /* Give VLC some extra time */
+  sleep(1);
   
   return true;
 }
@@ -300,7 +303,7 @@ bool get_video_tracks_vlc(int _readfd, int _writefd, int *_nb_video_tracks, stru
     return false;
   }
 
-  if (parse_tracks(buf, _nb_video_tracks, _new_video_tracks) == false)
+  if (parse_tracks_vlc(buf, _nb_video_tracks, _new_video_tracks) == false)
   {
     return false;
   }
@@ -327,12 +330,12 @@ bool get_audio_tracks_vlc(int _readfd, int _writefd, int *_nb_audio_tracks, stru
   if (write_pipe(_writefd, "atrack\n") < 0) {
     return false;
   }
-
+  
   if (read_pipe(_readfd, buf) < 0) {
     return false;
   }
-
-  if (parse_tracks(buf, _nb_audio_tracks, _new_audio_tracks) == false) {
+  
+  if (parse_tracks_vlc(buf, _nb_audio_tracks, _new_audio_tracks) == false) {
     return false;
   }
 
@@ -345,6 +348,7 @@ bool set_audio_track_vlc(int _readfd, int _writefd, struct track _audio_track) {
   if (write_pipe(_writefd, "atrack %d\n", _audio_track.id) < 0) {
     return false;
   }
+  
   if (read_pipe(_readfd, buf) < 0) {
     return false;
   }
@@ -363,7 +367,7 @@ bool get_subtitles_tracks_vlc(int _readfd, int _writefd, int *_nb_subtitles_trac
     return false;
   }
 
-  if (parse_tracks(buf, _nb_subtitles_tracks, _new_subtitles_tracks) == false)
+  if (parse_tracks_vlc(buf, _nb_subtitles_tracks, _new_subtitles_tracks) == false)
   {
     return false;
   }
@@ -448,93 +452,3 @@ bool set_fullscreen_vlc(int _readfd, int _writefd) {
 
   return true;
 }
-
-
-
-/*
-ssize_t init_vlc(int _writefd, int _readfd) {
-  char buf[PIPE_BUF];
-
-  return read_pipe(_readfd, buf);
-}
-
-ssize_t pause_vlc(int _writefd) {
-  return write_pipe(_writefd, "pause\n");
-}
-
-ssize_t play_vlc(int _writefd) {
-  return write_pipe(_writefd, "play\n");
-}
-
-ssize_t stop_vlc(int _writefd) {
-  return write_pipe(_writefd, "stop\n");
-}
-
-ssize_t shutdown_vlc(int _writefd) {
-  return write_pipe(_writefd, "shutdown\n");
-}
-
-ssize_t repeat_vlc(int _writefd, bool _repeat) {
-  if (_repeat == true) {
-    return write_pipe(_writefd, "repeat on\n");
-  } else {
-    return write_pipe(_writefd, "repeat off\n");
-  }
-}
-
-ssize_t set_fullscreen_vlc(int _writefd) {
-  return write_pipe(_writefd, "fullscreen\n");
-}
-
-ssize_t get_length_vlc(int _writefd, int _readfd, int *_length) {
-  char buf[PIPE_BUF];
-  
-  write_pipe(_writefd, "get_length\n");
-  read_pipe(_readfd, (void*)buf);
-  *_length = strtol(buf, NULL, 10);
-}
-
-ssize_t get_time_vlc(int _writefd, int _readfd, int *_time) {
-  char buf[PIPE_BUF];
-  
-  write_pipe(_writefd, "get_time\n");
-  read_pipe(_readfd, buf);
-  *_time = strtol(buf, NULL, 10);
-}
-
-ssize_t set_time_vlc(int _writefd, int _new_time) {
-  return write_pipe(_writefd, "seek %d\n", _new_time);
-}
-
-ssize_t get_volume_vlc(int _writefd, int _readfd, int *_volume) {
-  char buf[PIPE_BUF];
-
-  write_pipe(_writefd, "volume\n");
-  read_pipe(_readfd, buf);
-  *_volume = strtol(buf, NULL, 10);
-}
-
-ssize_t set_volume_vlc(int _writefd, int _volume) {
-  write_pipe(_writefd, "volume %d\n", _volume);
-}
-
-ssize_t mute(int _writefd) {
-  return set_volume_vlc(_writefd, 0);
-}
-
-ssize_t get_video_track_vlc(int _writefd, int _readfd, struct track *_video_tracks);
-ssize_t set_video_track_vlc(int _writefd, int _id_video_track) {
-  return write_pipe(_writefd, "vtrack %d\n", _id_video_track);
-}
-
-ssize_t get_audio_track_vlc(int _writefd, int _readfd, struct track *_audio_tracks);
-
-ssize_t set_audio_track_vlc(int _writefd, int _id_audio_track) {
-  return write_pipe(_writefd, "atrack %d\n", _id_audio_track);
-}
-
-ssize_t get_subtitles_track_vlc(int _writefd, int _readfd, struct track *_subtitles_tracks);
-ssize_t set_subtitles_track_vlc(int _writefd, int _id_subtitles_track) {
-  return write_pipe(_writefd, "strack %d\n", _id_subtitles_track);
-}
-*/

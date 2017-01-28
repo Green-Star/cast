@@ -5,6 +5,10 @@
 #include "server_types.h"
 #include "write_pipe.h"
 
+int get_nb_tracks_vlc(char *_string_tracks);
+int parse_one_track_vlc(char *_string_track, struct track *_track);
+bool parse_tracks_vlc(char *_string_tracks, int *_nb_tracks, struct track **_tracks);
+
 bool init_vlc(int _readfd, int _writefd);
 
 bool get_time_vlc(int _readfd, int _writefd, int *_new_time);
