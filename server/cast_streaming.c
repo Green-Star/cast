@@ -11,6 +11,7 @@ void * cast_streaming(void *_arg) {
   char path[PATH_LENGTH];
   char file_separator[2];
   char *default_directory = ".";
+  struct context c;
 
   stream = (struct cast_receiver *)_arg;
   
@@ -79,14 +80,92 @@ void * cast_streaming(void *_arg) {
     return (void*)EXIT_FAILURE;
   }
   /* Parent process */
-    else {
+  else {
     /* We're closing the read end of the parent -> child pipe */
     close(parent_to_child_pipe[0]);
     /* and the write end of the child -> parent pipe */
     close(child_to_parent_pipe[1]);    
 
+    init_context(VLC, &c, child_to_parent_pipe[0], parent_to_child_pipe[1], stream->upload_percentage);
+
+    /* TODO : Start WebUI */
+
+    /* TODO : Interface between WebUI and VLC */
+    char input[PIPE_BUF];
+    char *command, *argument;
+    int parameter;
+    int pipefd;
+
+    while (1) {
+      read_pipe(pipefd, input);
+      parse_input(input, command, argument);
+
+      if (strcmp(command, "set_time") == 0) {
+	if (argument == NULL) {
+	  continue;
+	}
+	parameter = strtol(argument, NULL, 10);
+	set_time(&c, parameter);
+      }
+      else if (strcmp(command, "pause") == 0) {
+	set_pause(&c);
+      }
+      else if (strcmp(command, "play") == 0) {
+	set_play(&c);
+      }
+      else if (strcmp(command, "stop") == 0) {
+	stop(&c);
+      }
+      else if (strcmp(command, "add_time") == 0) {
+	if (argument == NULL) {
+	  continue;
+	}
+	parameter = strtol(argument, NULL, 10);
+	add_time(&c, parameter);
+      }
+      else if (strcmp(command, "set_volume") == 0) {
+	if (argument == NULL) {
+	  continue;
+	}
+	parameter = strtol(argument, NULL, 10);
+	set_volume(&c, parameter);
+      }
+      else if (strcmp(command, "add_volume") == 0) {
+	if (argument == NULL) {
+	  continue;
+	}
+	parameter = strtol(argument, NULL, 10);
+	add_volume(&c, parameter);
+      }
+      else if (strcmp(command, "set_video_track") == 0) {
+	if (argument == NULL) {
+	  continue;
+	}
+	parameter = strtol(argument, NULL, 10);
+	set_video_track(&c, parameter);
+      }
+      else if (strcmp(command, "set_audio_track") == 0) {
+	if (argument == NULL) {
+	  continue;
+	}
+	parameter = strtol(argument, NULL, 10);
+	set_audio_track(&c, parameter);
+      }
+      else if (strcmp(command, "set_subtitles_track") == 0) {
+	if (argument == NULL) {
+	  continue;
+	}
+	parameter = strtol(argument, NULL, 10);
+	set_subtitles_track(&c, parameter);
+      }
+      else if (strcmp(command, "shutdown") == 0) {
+	shutdown(&c);
+	break;
+      }
+    }    
     
     
+#if 0    
     /* TODO : Try communication with VLC */
     char in[100];
     char dummy[100];
@@ -118,7 +197,7 @@ void * cast_streaming(void *_arg) {
     in[0] = 0;
     
   } while(t);
-    
+#endif    
     
     waitpid(-1, NULL, 0);
     return (void*)EXIT_SUCCESS;
@@ -127,81 +206,3 @@ void * cast_streaming(void *_arg) {
   return (void*)EXIT_SUCCESS;
 }
 
-/* TMP */
-void* start_display_writer(void *_arg) {
-  int *ptr;
-
-  ptr = (int*)_arg;
-    
-  display_writer(ptr[2], ptr[1]);
-  
-  return NULL;
-}
-
-int display_writer(int _readfd, int _writefd) {
-  char in[100];
-  int offset;
-  int c;
-
-  c=0;
-  do {
-    sleep(10);
-    c++;
-  } while(c < 20);
-
-#if 0  
-  write_pipe(_writefd, "pause\n");
-  
-  /* Let's give some rest to VLC to let it initialize its stuff */
-  sleep(1);
-  /*
-  write_pipe(_pipefd, "get_length\n");
-  write_pipe(_pipefd, "volume\n");
-  write_pipe(_pipefd, "atrack\n");
-  write_pipe(_pipefd, "vtrack\n");
-  write_pipe(_pipefd, "strack\n");
-  write_pipe(_pipefd, "pause\n");
-  write_pipe(_pipefd, "fullscreen\n");
-  */
-  init_vlc(_writefd, _readfd);
-
-  sleep(1);
-  int total_length = 0;
-  perror("avant");
-  get_length_vlc(_writefd, _readfd, &total_length);
-  perror("apres:");
-  printf("Total length : %d\n", total_length);
-  
-  
-  do {
-    
-    offset = 0;
-    do {
-      c = fgetc(stdin);
-      in[offset] = (char)c;
-      offset++;
-    } while(c != '\n');
-    in[offset] = 0;
-
-    
-    printf("[Thread display_writer] : j'ai lu [%s]\noffset : [%d]\n", in, offset);
-
-    perror("avant");
-
-    
-    if (strcmp("get_length\n", in) == 0)
-      {
-	get_length_vlc(_writefd, _readfd, &total_length);
-	printf("[THREAD] Longueur lue : %d\n", total_length);
-      }
-    else
-      offset = write_pipe(_writefd, "%s", in);
-    printf("[THREAD] ecrits : [%d]\n", offset);
-    
-    perror("write_pipe");
-  } while (strcmp(in, "quit\n") != 0);
-
-  printf("[Thread display_writer] : j'ai fini, je m'en vais\n");
-#endif
-  return EXIT_SUCCESS;
-}

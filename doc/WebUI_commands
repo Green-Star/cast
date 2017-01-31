@@ -1,0 +1,11 @@
+get_context /* Maybe */
+set_time <number>
+pause
+play
+stop
+add_time <number>
+set_volume <number>
+add_volume <number>
+set_video_track <number>
+set_audio_track <number>
+set_subtitles_track <number>

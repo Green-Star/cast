@@ -57,6 +57,29 @@ bool set_time(struct context *_context, int _time) {
   return get_time(_context);
 }
 
+bool add_time(struct context *_context, int _add) {
+  bool ret;
+  int new_time;
+
+  /* Update context data */
+  ret = get_time(_context);
+  if (ret == false) {
+    return false;
+  }
+
+  new_time = _context->time + _add;
+
+  if (new_time < 0) {
+    new_time = 0;
+  }
+  else if (new_time > _context->length) {
+    new_time = _context->length;
+  }
+
+  /* Set new time */
+  return set_time(_context, new_time);
+}
+
 bool get_length(struct context *_context) {
   return (*_context->get_length)(_context->readfd, _context->writefd, &(_context->length));
 }
@@ -74,6 +97,24 @@ bool set_volume(struct context *_context, int _volume) {
   }
 
   return get_volume(_context);
+}
+
+bool add_volume(struct context *_context, int _add) {
+  bool ret;
+  int new_volume;
+
+  ret = get_volume(_context);
+  if (ret == false) {
+    return false;
+  }
+
+  new_volume = _context->volume + _add;
+
+  if (new_volume < 0) {
+    new_volume = 0;
+  }
+
+  return set_volume(_context, new_volume);
 }
 
 bool get_video_tracks(struct context *_context) {
@@ -273,4 +314,21 @@ char *track_to_json(struct track _track) {
 	  bool_to_json(_track.selected));
 
   return json_string;
+}
+
+
+bool parse_input(char *_input, char *_command, char *_argument) {
+  char *s;
+
+  _command = _input;
+  s = strstr(_input, " ");
+  if (s == NULL) {
+    _argument = NULL;
+  }
+  else {
+    _argument = s+1;
+    *s = 0;
+  }
+    
+  return true;
 }
