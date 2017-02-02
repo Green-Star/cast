@@ -26,7 +26,9 @@ bool set_subtitles_track(struct context *_context, int _trackid);
 bool set_pause(struct context *_context);
 bool set_play(struct context *_context);
 bool stop(struct context *_context);
-bool shutdown(struct context *_context);
+bool shutdown_player(struct context *_context);
+
+void update_context_data(struct context *_context);
 
 char *context_to_json(struct context _context);
 char *tracks_to_json(int _nb_tracks, struct track *_tracks);
@@ -36,4 +38,4 @@ static inline char *bool_to_json(bool b) {
   return (b) ? "true" : "false";
 }
 
-bool parse_input(char *_input, char *_command, char *_argument);
+bool parse_input(char *_input, char **_command, char **_argument);

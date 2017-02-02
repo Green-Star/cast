@@ -4,7 +4,7 @@ bool init_context(int _context_type, struct context *_context, int _readfd, int 
   _context->readfd = _readfd;
   _context->writefd = _writefd;
   _context->upload_percentage = _upload_percentage;
-  _context->upload_complete = (*_upload_percentage == 100);
+  _context->upload_complete = false;
   _context->is_playing = false;
   _context->time = 0;
   _context->length = 0;
@@ -65,6 +65,13 @@ bool add_time(struct context *_context, int _add) {
   ret = get_time(_context);
   if (ret == false) {
     return false;
+  }
+
+  if (_context->upload_complete == false) {
+    ret = get_length(_context);
+    if (ret == false) {
+      return false;
+    }
   }
 
   new_time = _context->time + _add;
@@ -248,8 +255,47 @@ bool stop(struct context *_context) {
   return (*_context->stop)(_context->readfd, _context->writefd);
 }
 
-bool shutdown(struct context *_context) {
+bool shutdown_player(struct context *_context) {
   return (*_context->shutdown)(_context->readfd, _context->writefd);
+}
+
+void update_context_data(struct context *_context) {
+  /* Update these data at every call */ 
+  (void) get_time(_context);
+  (void) get_volume(_context);
+
+  /* Only need to update 
+	. Length
+	. Video tracks
+	. Audio tracks
+	. Subtitles tracks
+     when the upload is not complete 
+     since they won't be modified afterwards 
+  */
+  /* If the upload is not complete, simply update data */
+  if ((*(_context->upload_percentage)) < 100) {
+    (void) get_length(_context);
+    (void) get_video_tracks(_context);
+    (void) get_audio_tracks(_context);
+    (void) get_subtitles_tracks(_context);
+    _context->upload_complete = false;
+  }
+  /* If the upload is complete */
+  else {
+    /* If the data has already been updated, do nothing */
+    if (_context->upload_complete == false) {
+      /* Otherwise, update them */
+      (void) get_length(_context);
+      (void) get_video_tracks(_context);
+      (void) get_audio_tracks(_context);
+      (void) get_subtitles_tracks(_context);
+    }
+    /* And set the upload_complete flag to true */
+    /* (Note : This flag must be set to true only here !) */
+    _context->upload_complete = true;
+  }
+
+  return;
 }
 
 char *context_to_json(struct context _context) {
@@ -317,18 +363,24 @@ char *track_to_json(struct track _track) {
 }
 
 
-bool parse_input(char *_input, char *_command, char *_argument) {
+bool parse_input(char *_input, char **_command, char **_argument) {
   char *s;
 
-  _command = _input;
+  *_command = _input;
   s = strstr(_input, " ");
   if (s == NULL) {
-    _argument = NULL;
+    *_argument = NULL;
   }
   else {
-    _argument = s+1;
+    *_argument = s+1;
     *s = 0;
   }
-    
+
+  /* Remove \n from the original string */
+  s = strstr(_input, "\n");
+  if (s != NULL) {
+    *s = 0;
+  }
+  
   return true;
 }
