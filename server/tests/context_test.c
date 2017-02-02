@@ -77,6 +77,7 @@ int main(int argc, char **argv) {
 
     init_context(VLC, &c, readfd, writefd, &upload);
     update_context_data(&c);
+    write_pipe(STDOUT_FILENO, "%s\n", context_to_json(c));
 
     while (1) {
       read_pipe(STDIN_FILENO, input);
