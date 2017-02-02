@@ -88,6 +88,7 @@ void * cast_streaming(void *_arg) {
 
     init_context(VLC, &c, child_to_parent_pipe[0], parent_to_child_pipe[1], stream->upload_percentage);
     update_context_data(&c);
+    write_pipe(pipefd, "%s\n", context_to_json(c));
 
     /* TODO : Start WebUI */
 
@@ -170,7 +171,7 @@ void * cast_streaming(void *_arg) {
       write_pipe(pipefd, "%s\n", context_to_json(c));
     }    
     
-    
+
 #if 0    
     /* TODO : Try communication with VLC */
     char in[100];
