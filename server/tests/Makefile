@@ -18,7 +18,7 @@ $(BINDIR)/write_pipe_test: write_pipe_test.c $(BINDIR)/write_pipe.o
 $(BINDIR)/command_vlc_test: command_vlc_test.c $(BINDIR)/write_pipe.o $(BINDIR)/command_vlc.o
 	$(CC) $(CFLAGS) $^ $(INCLUDES) -o $@
 
-$(BINDIR)/context_test: context_test.c $(BINDIR)/write_pipe.o $(BINDIR)/context.o
+$(BINDIR)/context_test: context_test.c $(BINDIR)/write_pipe.o $(BINDIR)/context.o $(BINDIR)/command_vlc.o
 	$(CC) $(CFLAGS) $^ $(INCLUDES) -o $@
 
 all:
