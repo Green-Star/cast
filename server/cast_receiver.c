@@ -38,8 +38,22 @@ void *cast_receiver(void *_arg) {
   printf("Starting receiving of %s (%ld bytes)\n", upload->file.file_name, upload->file.file_length);
   
   do {
+    if (upload->requested_shutdown) {
+      printf("\rRequested shutdown\n");
+      free(buffer);
+      fclose(upload->file.file);
+      return (void*)EXIT_SUCCESS;;
+    }
+    
     bytes_read = recv(upload->sockfd, (void*)buffer, buffer_size, 0);
 
+    if (upload->requested_shutdown) {
+      printf("\rRequested shutdown\n");
+      free(buffer);
+      fclose(upload->file.file);
+      return (void*)EXIT_SUCCESS;;
+    }
+    
     if (bytes_read < 0) {
       print_error("\rError in recv");
       fprintf(stderr, "Aborting transfer\n");
@@ -51,8 +65,23 @@ void *cast_receiver(void *_arg) {
 
     bytes_to_write = bytes_read;
     do {
+      
+      if (upload->requested_shutdown) {
+	printf("\rRequested shutdown\n");
+	free(buffer);
+	fclose(upload->file.file);
+	return (void*)EXIT_SUCCESS;
+      }
+      
       current_bytes_written = fwrite((void*)buffer, (size_t)1, bytes_to_write, upload->file.file);
 
+      if (upload->requested_shutdown) {
+	printf("\rRequested shutdown\n");
+	free(buffer);
+	fclose(upload->file.file);
+	return (void*)EXIT_SUCCESS;
+      }
+      
       if (current_bytes_written == 0) {
 	print_error("\rError in fwrite");
 	fprintf(stderr, "Aborting transfer\n");

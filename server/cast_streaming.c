@@ -87,18 +87,19 @@ void * cast_streaming(void *_arg) {
     close(child_to_parent_pipe[1]);    
 
     init_context(VLC, &c, child_to_parent_pipe[0], parent_to_child_pipe[1], stream->upload_percentage);
+    update_context_data(&c);
 
     /* TODO : Start WebUI */
 
     /* TODO : Interface between WebUI and VLC */
     char input[PIPE_BUF];
-    char *command, *argument;
+    char *command = NULL, *argument = NULL;
     int parameter;
     int pipefd;
 
     while (1) {
       read_pipe(pipefd, input);
-      parse_input(input, command, argument);
+      parse_input(input, &command, &argument);
 
       if (strcmp(command, "set_time") == 0) {
 	if (argument == NULL) {
@@ -159,9 +160,14 @@ void * cast_streaming(void *_arg) {
 	set_subtitles_track(&c, parameter);
       }
       else if (strcmp(command, "shutdown") == 0) {
-	shutdown(&c);
+	shutdown_player(&c);
+	*(stream->requested_shutdown) = true;
+	/* Kill WebUI process */
 	break;
       }
+
+      update_context_data(&c);
+      write_pipe(pipefd, "%s\n", context_to_json(c));
     }    
     
     

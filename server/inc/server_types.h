@@ -5,6 +5,7 @@ struct cast_receiver {
   int filefd;
   int sockfd;
   int *upload_percentage;
+  bool *requested_shutdown;
 };
 
 #define LANGUAGE_SIZE 50

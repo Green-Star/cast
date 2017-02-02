@@ -17,6 +17,7 @@ int main(int argc, char **argv) {
   pthread_t receiver_thread_id, streaming_thread_id;
   int *receiver_thread_return_code, streaming_thread_return_code;
   int upload_percentage;
+  bool requested_shutdown;
 
   sockfd = strtol(argv[1], NULL, 10);
  
@@ -25,10 +26,13 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
+  requested_shutdown = false;
+  
   receiver_file.file = upload_file.file;
   receiver_file.filefd = upload_file.fd;
   receiver_file.sockfd = sockfd;
   receiver_file.upload_percentage = &upload_percentage;
+  receiver_file.requested_shutdown = &requested_shutdown;
   
   /* Start receiver part */
   if (upload_file.upload) {
@@ -53,6 +57,10 @@ int main(int argc, char **argv) {
   if (pthread_join(receiver_thread_id, (void**)&receiver_thread_return_code) != 0)
   {
     handle_pthread_join_error();
+  }
+
+  if (receiver_thread_return_code == (void*)EXIT_SUCCESS) {
+    /* Signal streaming thread to update context */
   }
 
   if (pthread_join(streaming_thread_id, (void**)&streaming_thread_return_code) != 0)
