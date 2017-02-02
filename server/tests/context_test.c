@@ -1,12 +1,15 @@
 #include "context.h"
 
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 int main(int argc, char **argv) {
   struct context c;
   char input[PIPE_BUF];
   char *command = NULL, *argument = NULL;
   int upload = 0;
+  int parameter;
 
   int parent_to_child_pipe[2], child_to_parent_pipe[2];
   pid_t pid;
@@ -74,14 +77,6 @@ int main(int argc, char **argv) {
 
     init_context(VLC, &c, readfd, writefd, &upload);
     update_context_data(&c);
-
-    /* TODO : Start WebUI */
-
-    /* TODO : Interface between WebUI and VLC */
-    char input[PIPE_BUF];
-    char *command = NULL, *argument = NULL;
-    int parameter;
-    int pipefd;
 
     while (1) {
       read_pipe(STDIN_FILENO, input);
@@ -153,7 +148,9 @@ int main(int argc, char **argv) {
       }
       else if (strcmp(command, "shutdown") == 0) {
 	shutdown_player(&c);
+	/* Useless statement
 	*(stream->requested_shutdown) = true;
+	*/
 	/* Kill WebUI process */
 	break;
       }
