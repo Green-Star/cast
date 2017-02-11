@@ -26,6 +26,10 @@ static inline void handle_fork_error() {
   print_error("fork");
 }
 
+static inline void handle_kill_error() {
+  print_error("kill");
+}
+
 static inline void handle_execlp_error() {
   print_error("execlp");
 }
@@ -72,4 +76,8 @@ static inline void handle_pthread_create_error() {
 
 static inline void handle_pthread_join_error() {
   print_error("pthread_error");
+}
+
+static inline void handle_chdir_error() {
+  print_error("chdir");
 }

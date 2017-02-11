@@ -38,7 +38,7 @@ void *cast_receiver(void *_arg) {
   printf("Starting receiving of %s (%ld bytes)\n", upload->file.file_name, upload->file.file_length);
   
   do {
-    if (upload->requested_shutdown) {
+    if (*(upload->requested_shutdown)) {
       printf("\rRequested shutdown\n");
       free(buffer);
       fclose(upload->file.file);
@@ -47,7 +47,7 @@ void *cast_receiver(void *_arg) {
     
     bytes_read = recv(upload->sockfd, (void*)buffer, buffer_size, 0);
 
-    if (upload->requested_shutdown) {
+    if (*(upload->requested_shutdown)) {
       printf("\rRequested shutdown\n");
       free(buffer);
       fclose(upload->file.file);
@@ -66,7 +66,7 @@ void *cast_receiver(void *_arg) {
     bytes_to_write = bytes_read;
     do {
       
-      if (upload->requested_shutdown) {
+      if (*(upload->requested_shutdown)) {
 	printf("\rRequested shutdown\n");
 	free(buffer);
 	fclose(upload->file.file);
@@ -75,7 +75,7 @@ void *cast_receiver(void *_arg) {
       
       current_bytes_written = fwrite((void*)buffer, (size_t)1, bytes_to_write, upload->file.file);
 
-      if (upload->requested_shutdown) {
+      if (*(upload->requested_shutdown)) {
 	printf("\rRequested shutdown\n");
 	free(buffer);
 	fclose(upload->file.file);

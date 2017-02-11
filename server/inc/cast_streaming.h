@@ -17,3 +17,4 @@
 #include "context.h"
 
 void * cast_streaming(void *_arg);
+void start_webUI(int *_parent_to_UI_pipe, int *_UI_to_parent_pipe);
